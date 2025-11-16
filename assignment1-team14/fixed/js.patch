@@ -1,0 +1,32 @@
+--- a/js.c
++++ b/js.c
+@@ -145,14 +145,26 @@
+     if (current.type == TOKEN_LET) {
+         next_token();
+         if (current.type != TOKEN_ID) { printf("Expected identifier\n"); exit(1); }
+-        char name[64]; strcpy(name, current.text);
++        char name[64]; // fixed-sized buffer
++        strncpy(name, current.text, sizeof(name) - 1);
++        name[sizeof(name) - 1] = '\0'; // Force null-termination
+         next_token();
+         if (current.type != TOKEN_ASSIGN) { printf("Expected '='\n"); exit(1); }
+         next_token();
+         double val = parse_expr();
+         if (current.type == TOKEN_SEMI) next_token();
+-        vars[var_count++] = (Var){ .value = val };
+-        strcpy(vars[var_count - 1].name, name);
++
++  	// Check variables' count
++        if (var_count >= 128) {
++            printf("Variable limit reached\n");
++            exit(1);
++        }
++
++        vars[var_count].value = val;
++        strncpy(vars[var_count].name, name, sizeof(vars[var_count].name) - 1);      
++	vars[var_count].name[sizeof(vars[var_count].name) - 1] = '\0'; // Force null-termination
++
++        var_count++;
+     } else {
+         double val = parse_expr();
+         if (current.type == TOKEN_SEMI) next_token();
