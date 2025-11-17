@@ -30,7 +30,7 @@ RUN make install
 
 # 3. Compile js.c
 WORKDIR /target
-RUN afl-clang-fast -g -O2 -o js js.c
+RUN afl-clang-fast -g -o js js.c
 
 # 4. Copy in/seed
 COPY in/ /target/in/
