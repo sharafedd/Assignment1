@@ -1,6 +1,9 @@
 # check=skip=JSONArgsRecommended
 FROM ubuntu:24.04
 
+# Runtime environment settings
+ENV AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1
+
 # 1. Install all dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     clang \
